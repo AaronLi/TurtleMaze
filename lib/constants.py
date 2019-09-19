@@ -1,0 +1,20 @@
+X = 0
+Y = 1
+INFINITY = 999999999999 #more like big
+
+class CARDINAL:
+    NORTH = 0
+    EAST = 1
+    SOUTH = 2
+    WEST = 3
+    NORTH_MOVE = (0, 1)
+    SOUTH_MOVE = (0, -1)
+    EAST_MOVE = (-1, 0)
+    WEST_MOVE = (1, 0)
+
+    MOVE_COORDINATE_CHANGES = {NORTH:NORTH_MOVE, SOUTH:SOUTH_MOVE, EAST:EAST_MOVE, WEST:WEST_MOVE}
+
+class MAZE:
+    WALL = 0
+    PATH = 1
+    DEFAULT_WALL_COLOUR = (0,0,0)
