@@ -1,8 +1,8 @@
 from lib import maze, mazeturtle, turtlebrain
 
-image_maze = maze.Maze("mazes\\ono1000x1000.png")
+image_maze = maze.Maze("mazes\\medium20x20.png")
 turtle_boi = mazeturtle.MazeTurtle(image_maze.get_start(), image_maze)
-turtle_brain = turtlebrain.TurtleBrain(turtle_boi)
+turtle_brain = turtlebrain.TurtleBrain(turtle_boi, save_video=False)
 
 turtle_brain.discover_maze()
 
