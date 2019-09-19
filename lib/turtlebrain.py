@@ -17,7 +17,14 @@ class TurtleBrain():
                 self.body.turn_right()
 
     def solve_maze(self):
-        pass
+        self.goto(self.body.maze.get_start())
+        path_to_end = self.pathfind_to(self.body.maze.get_end())
+        self.render_path(path_to_end)
+        self.follow_path(path_to_end)
+
+    def goto(self, pos):
+        path = self.pathfind_to(pos)
+        self.follow_path(path)
 
     def rotate_for_move(self, desired_move_directions):
         desired_move_directions = tuple(desired_move_directions)
@@ -38,9 +45,9 @@ class TurtleBrain():
 
         while len(self.open_set) > 0:
             new_target = self.open_set.pop()
-            print("new target", new_target)
-            path = self.pathfind_to(new_target)
+            #print("moving from", self.body.pos, "to", new_target)
 
+            path = self.pathfind_to(new_target)
             self.follow_path(path)
             self.check_directions()
 
@@ -58,9 +65,11 @@ class TurtleBrain():
     def check_directions(self):
         for i in range(4):
             check_result = self.body.check_front()
-            if check_result is not None and (check_result not in self.closed_set):
-                self.open_set.add(check_result)
+            if check_result is not None:
+                if check_result not in self.closed_set:
+                    self.open_set.add(check_result)
                 self.graph.add_connection(self.body.pos, check_result)
+                self.closed_set.add(check_result)
             self.body.turn_right()
 
     def pathfind_to(self, destination):
@@ -111,4 +120,10 @@ class TurtleBrain():
         total_path.reverse()
         return total_path
 
+    def render_path(self, path):
+        draw_image = self.body.maze.maze_map.copy()
 
+        for coordinate in path:
+            draw_image.putpixel(coordinate, (255,0,0))
+
+        draw_image.save("path_rendering.png")
