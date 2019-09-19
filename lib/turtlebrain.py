@@ -5,14 +5,17 @@ from PIL import Image
 from lib.constants import *
 
 class TurtleBrain():
-    def __init__(self, body :mazeturtle.MazeTurtle):
+    def __init__(self, body :mazeturtle.MazeTurtle, save_video = False):
         self.graph = mazegraph.MazeGraph()
         self.body = body
         self.closed_set = set()
         self.open_set = []
 
-        self.video_size = mathtools.list_mul(self.body.maze.maze_map.size, (10, 10))
-        self.video_recorder = cv2.VideoWriter("turtle_path.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 60, self.video_size, True)
+        self.save_video = save_video
+
+        if self.save_video:
+            self.video_size = mathtools.list_mul(self.body.maze.maze_map.size, (10, 10))
+            self.video_recorder = cv2.VideoWriter("turtle_path.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 60, self.video_size, True)
 
     def face_cardinal(self, direction):
         while direction - self.body.facing != 0:
@@ -140,6 +143,8 @@ class TurtleBrain():
         draw_image.save("path_rendering.png")
 
     def render_state(self, paths=()):
+        if not self.save_video:
+            return
         base_frame = Image.new('RGB', self.body.maze.maze_map.size)
 
         for coordinate in self.graph.graph:
