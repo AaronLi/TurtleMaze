@@ -2,7 +2,6 @@ from lib.constants import *
 from lib.maze import Maze
 from operator import add
 
-
 class MazeTurtle:
     def __init__(self, start_position, maze_in: Maze) -> None:
         self.pos = start_position
