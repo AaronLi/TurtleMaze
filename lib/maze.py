@@ -4,7 +4,7 @@ from lib.constants import *
 class Maze():
     def __init__(self, maze_base: str, entryPoint = None, exitPoint = None, wall_colour = MAZE.DEFAULT_WALL_COLOUR) -> None:
         super().__init__()
-        self.maze_map = Image.open(maze_base)
+        self.maze_map = Image.open(maze_base).convert('RGB')
 
         self.wall_colour = wall_colour
 
