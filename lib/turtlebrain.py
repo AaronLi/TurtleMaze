@@ -4,8 +4,6 @@ import numpy as np
 from PIL import Image
 from lib.constants import *
 
-# TODO: optimize maze discovery to be dfs
-
 class TurtleBrain():
     def __init__(self, body :mazeturtle.MazeTurtle):
         self.graph = mazegraph.MazeGraph()
@@ -159,5 +157,5 @@ class TurtleBrain():
         opencv_frame = np.array(base_frame)
         opencv_frame = cv2.cvtColor(opencv_frame, cv2.COLOR_BGR2RGB)
         opencv_frame = cv2.resize(opencv_frame, self.video_size, interpolation=cv2.INTER_AREA)
-        
+
         self.video_recorder.write(opencv_frame)
