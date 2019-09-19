@@ -15,7 +15,7 @@ class TurtleBrain():
 
         if self.save_video:
             self.video_size = mathtools.list_mul(self.body.maze.maze_map.size, (10, 10))
-            self.video_recorder = cv2.VideoWriter("turtle_path.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 60, self.video_size, True)
+            self.video_recorder = cv2.VideoWriter("turtle_path.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 120, self.video_size, True)
 
     def face_cardinal(self, direction):
         while direction - self.body.facing != 0:
@@ -140,7 +140,7 @@ class TurtleBrain():
         for coordinate in path:
             draw_image.putpixel(coordinate, (255,0,0))
 
-        draw_image.save("path_rendering.png")
+        draw_image.save("demo_path.png")
 
     def render_state(self, paths=()):
         if not self.save_video:
