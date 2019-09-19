@@ -29,7 +29,7 @@ class MazeTurtle:
     '''
     def check_front(self):
         position_delta = CARDINAL.MOVE_COORDINATE_CHANGES[self.facing]
-        front_space = tuple(map(add, self.pos, position_delta))
+        front_space = (self.pos[X] + position_delta[X], self.pos[Y] + position_delta[Y])
         if self.maze.check_position(front_space) == MAZE.PATH:
             return tuple(front_space)
         else:

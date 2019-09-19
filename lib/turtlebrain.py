@@ -61,8 +61,9 @@ class TurtleBrain():
             self.check_directions()
 
     def follow_path(self, path):
+        path.reverse()
         while len(path) > 0:
-            next_node = path.pop(0)
+            next_node = path.pop()
 
             position_difference = mathtools.list_sub(next_node, self.body.pos)
 
