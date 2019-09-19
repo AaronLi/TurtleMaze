@@ -140,7 +140,7 @@ class TurtleBrain():
         for coordinate in path:
             draw_image.putpixel(coordinate, (255,0,0))
 
-        draw_image.save("demo_path.png")
+        draw_image.save("maze_path.png")
 
     def render_state(self, paths=()):
         if not self.save_video:
