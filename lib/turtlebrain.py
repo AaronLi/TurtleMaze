@@ -61,7 +61,6 @@ class TurtleBrain():
             self.check_directions()
 
     def follow_path(self, path):
-        path.reverse()
         while len(path) > 0:
             next_node = path.pop()
 
@@ -127,12 +126,13 @@ class TurtleBrain():
                         heapq.heappush(openSet, new_open_node)
         return None
 
-    def __reconstruct_path(self, came_from, current):
+    # Path is in reverse, pop elements off the end to follow the path forwards
+    @staticmethod
+    def __reconstruct_path(came_from, current):
         total_path = [current]
         while current in came_from.keys():
             current = came_from[current]
             total_path.append(current)
-        total_path.reverse()
         return total_path
 
     def render_path(self, path):

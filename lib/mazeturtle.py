@@ -7,7 +7,6 @@ class MazeTurtle:
         self.pos = start_position
         self.facing = CARDINAL.NORTH
         self.maze = maze_in
-        print("I'm a turtle starting at position", self.pos)
 
     def turn_right(self):
         self.facing = (self.facing + 1) % 4
