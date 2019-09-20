@@ -32,13 +32,14 @@ class Maze():
         return self.exitPoint
 
     def check_position(self, xy) -> bool:
-        if xy[X] not in range(self.width) or xy[Y] not in range(self.height):
-            return MAZE.WALL
-        captured_colour = self.maze_map.getpixel(xy)[:3]
-        if captured_colour == self.wall_colour:
-            return MAZE.WALL
+        if (0 <= xy[X] < self.width) and (0 <= xy[Y] < self.height):
+            captured_colour = self.maze_map.getpixel(xy)[:3]
+            if captured_colour == self.wall_colour:
+                return MAZE.WALL
+            else:
+                return MAZE.PATH
         else:
-            return MAZE.PATH
+            return MAZE.WALL
 
     def find_holes(self) -> list:
         holes = []
