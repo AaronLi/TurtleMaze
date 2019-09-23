@@ -3,8 +3,11 @@ from lib.maze import Maze
 from operator import add
 
 class MazeTurtle:
-    def __init__(self, start_position, maze_in: Maze) -> None:
-        self.pos = start_position
+    def __init__(self, maze_in: Maze, start_position = None) -> None:
+        if start_position is None:
+            self.pos = maze_in.get_start()
+        else:
+            self.pos = start_position
         self.facing = CARDINAL.NORTH
         self.maze = maze_in
 

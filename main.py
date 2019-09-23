@@ -1,9 +1,10 @@
-from lib import maze, mazeturtle, turtlebrain
+from lib import maze, mazeturtle, turtlebrain, turtlerenderer
 import time
 
-image_maze = maze.Maze("mazes\\04 ono1000x1000.png")
-turtle_boi = mazeturtle.MazeTurtle(image_maze.get_start(), image_maze)
-turtle_brain = turtlebrain.TurtleBrain(turtle_boi, save_video=False)
+image_maze = maze.Maze("mazes\\02 hard50x50.png")
+turtle_boi = mazeturtle.MazeTurtle(image_maze)
+turtle_renderer = turtlerenderer.TurtleRenderer(image_maze, save_video=False, show_progress=True, frame_rate=-1)
+turtle_brain = turtlebrain.TurtleBrain(turtle_boi, turtle_renderer)
 
 discover_maze_start = time.time()
 turtle_brain.discover_maze()

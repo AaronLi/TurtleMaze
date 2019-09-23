@@ -25,6 +25,10 @@ class Maze():
     def height(self):
         return self.maze_map.height
 
+    @property
+    def size(self):
+        return self.maze_map.size
+
     def get_start(self):
         return self.entryPoint
 

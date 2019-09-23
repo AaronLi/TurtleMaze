@@ -1,21 +1,20 @@
 from lib import mazeturtle, mazegraph, mathtools
-import heapq, cv2
-import numpy as np
-from PIL import Image
+import heapq
 from lib.constants import *
 
+
 class TurtleBrain():
-    def __init__(self, body :mazeturtle.MazeTurtle, save_video = False):
+    def __init__(self, body :mazeturtle.MazeTurtle, turtle_recorder = None, show_turns = False):
         self.graph = mazegraph.MazeGraph()
         self.body = body
         self.closed_set = set()
         self.open_set = []
+        self.turtle_recorder = turtle_recorder
+        self.show_turns = show_turns
 
-        self.save_video = save_video
-
-        if self.save_video:
-            self.video_size = mathtools.list_mul(self.body.maze.maze_map.size, (10, 10))
-            self.video_recorder = cv2.VideoWriter("turtle_path.mp4", cv2.VideoWriter_fourcc(*'mp4v'), 120, self.video_size, True)
+    @property
+    def maze(self):
+        return self.body.maze
 
     def face_cardinal(self, direction):
         while direction - self.body.facing != 0:
@@ -23,13 +22,26 @@ class TurtleBrain():
                 self.body.turn_left()
             else:
                 self.body.turn_right()
-            self.render_state()
+
+            # uncomment to see turns, not enough information is here for the path
+            # to be rendered so this will cause the active path to flicker on turns
+            if self.show_turns and self.turtle_recorder is not None:
+                self.turtle_recorder.render_state(self)
 
     def solve_maze(self):
         self.goto(self.body.maze.get_start())
         path_to_end = self.pathfind_to(self.body.maze.get_end())
-        self.render_path(path_to_end)
+        if self.turtle_recorder is not None:
+            self.render_path(path_to_end)
         self.follow_path(path_to_end)
+
+    def render_path(self, path):
+        draw_image = self.maze.maze_map.copy()
+
+        for coordinate in path:
+            draw_image.putpixel(coordinate, (255,0,0))
+
+        draw_image.save("maze_path.png")
 
     def goto(self, pos):
         path = self.pathfind_to(pos)
@@ -54,7 +66,6 @@ class TurtleBrain():
 
         while len(self.open_set) > 0:
             new_target = self.open_set.pop()
-            #print("moving from", self.body.pos, "to", new_target)
 
             path = self.pathfind_to(new_target)
             self.follow_path(path)
@@ -70,21 +81,20 @@ class TurtleBrain():
                 continue
             self.rotate_for_move(position_difference)
             self.body.move_forward()
-            self.render_state((path,))
+            self.turtle_recorder.render_state(self, (path,))
 
     def check_directions(self):
         for i in range(4):
             check_result = self.body.check_front()
             if check_result is not None:
                 if check_result not in self.closed_set:
-                    if type(self.open_set) == list:
-                        self.open_set.append(check_result)
-                    else:
-                        self.open_set.add(check_result)
+                    self.open_set.append(check_result)
                 self.graph.add_connection(self.body.pos, check_result)
                 self.closed_set.add(check_result)
             self.body.turn_right()
-            self.render_state()
+
+            if self.turtle_recorder is not None:
+                self.turtle_recorder.render_state(self)
 
     def pathfind_to(self, destination):
         start_point = self.body.pos
@@ -135,33 +145,4 @@ class TurtleBrain():
             total_path.append(current)
         return total_path
 
-    def render_path(self, path):
-        draw_image = self.body.maze.maze_map.copy()
 
-        for coordinate in path:
-            draw_image.putpixel(coordinate, (255,0,0))
-
-        draw_image.save("maze_path.png")
-
-    def render_state(self, paths=()):
-        if not self.save_video:
-            return
-        base_frame = Image.new('RGB', self.body.maze.maze_map.size)
-
-        for coordinate in self.graph.graph:
-            base_frame.putpixel(coordinate, COLOUR.WHITE)
-
-        for open_point in self.open_set:
-            base_frame.putpixel(open_point, COLOUR.BLUE)
-
-        for i, path in enumerate(paths):
-            for coordinate in path:
-                base_frame.putpixel(coordinate, VIDEO_RENDERING.PATH_COLOURS[i])
-
-        base_frame.putpixel(self.body.pos, COLOUR.TURTLE_GREEN)
-
-        opencv_frame = np.array(base_frame)
-        opencv_frame = cv2.cvtColor(opencv_frame, cv2.COLOR_BGR2RGB)
-        opencv_frame = cv2.resize(opencv_frame, self.video_size, interpolation=cv2.INTER_AREA)
-
-        self.video_recorder.write(opencv_frame)
